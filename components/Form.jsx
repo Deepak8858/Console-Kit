@@ -16,6 +16,47 @@ export default function Form() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [condition, setCondition] = useState('');
   const [images, setImages] = useState([]);
+  const [title, setTitle] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const currentErrors = {};
+    if (title.trim() === '') {
+      currentErrors.title = "Product title is required.";
+    }
+    if (condition === '') {
+      currentErrors.condition = "Please select a condition.";
+    }
+    if (price.trim() === '') {
+      currentErrors.price = "Price is required.";
+    } else if (isNaN(parseFloat(price)) || parseFloat(price) <= 0) {
+      currentErrors.price = "Price must be a positive number.";
+    }
+    if (selectedCategory === null) {
+      currentErrors.category = "Please select a category.";
+    }
+    if (description.trim() === '') {
+      currentErrors.description = "Description is required.";
+    }
+    if (images.length === 0) {
+      currentErrors.images = "Please upload at least one photo.";
+    }
+    setErrors(currentErrors);
+    return Object.keys(currentErrors).length === 0;
+  };
+
+  const handleSubmit = () => {
+    const isValid = validateForm();
+    if (isValid) {
+      console.log("Form submitted successfully!");
+      // Placeholder for actual submission logic
+    } else {
+      console.log("Form validation failed:", errors);
+    }
+  };
+
   const handleSelectImage = () => {
   if (images.length >= 5) return;
 
@@ -36,7 +77,7 @@ export default function Form() {
 
       <Text style={styles.label}>Add Photos</Text>
 <View style={styles.imageContainer}>
-  <TouchableOpacity style={styles.addPhotoBox} onPress={handleSelectImage}>
+  <TouchableOpacity style={[styles.addPhotoBox, errors.images ? styles.inputError : null]} onPress={handleSelectImage}>
     <Text style={{ color: '#aaa', textAlign: 'center' }}>+</Text>
     <Text style={{ color: '#aaa', fontSize: 10, textAlign: 'center' }}>Add Photos</Text>
   </TouchableOpacity>
@@ -50,15 +91,17 @@ export default function Form() {
   ))}
 </View>
 <Text style={styles.uploadInfo}>Upload up to 5 images (tap + to add)</Text>
+{errors.images && <Text style={styles.errorText}>{errors.images}</Text>}
 
 
       {/* Product Title */}
       <Text style={styles.label}>Product Title</Text>
-      <TextInput style={styles.input} placeholder="Enter product title" placeholderTextColor="#aaa" />
+      <TextInput style={[styles.input, errors.title ? styles.inputError : null]} placeholder="Enter product title" placeholderTextColor="#aaa" value={title} onChangeText={setTitle} />
+      {errors.title && <Text style={styles.errorText}>{errors.title}</Text>}
 
       {/* Condition Dropdown */}
       <Text style={styles.label}>Condition</Text>
-      <View style={styles.pickerWrapper}>
+      <View style={[styles.pickerWrapper, errors.condition ? styles.inputError : null]}>
         <Picker
           selectedValue={condition}
           onValueChange={(itemValue) => setCondition(itemValue)}
@@ -71,10 +114,12 @@ export default function Form() {
           <Picker.Item label="Used" value="Used" />
         </Picker>
       </View>
+      {errors.condition && <Text style={styles.errorText}>{errors.condition}</Text>}
 
       {/* Price */}
       <Text style={styles.label}>Price (INR)</Text>
-      <TextInput style={styles.input} placeholder="₹ 0.00" keyboardType="numeric" placeholderTextColor="#aaa" />
+      <TextInput style={[styles.input, errors.price ? styles.inputError : null]} placeholder="₹ 0.00" keyboardType="numeric" placeholderTextColor="#aaa" value={price} onChangeText={setPrice} />
+      {errors.price && <Text style={styles.errorText}>{errors.price}</Text>}
 
       {/* Category (Moved Up) */}
       <Text style={styles.label}>Category</Text>
@@ -99,22 +144,26 @@ export default function Form() {
           </TouchableOpacity>
         ))}
       </View>
+      {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
 
       {/* Description */}
       <Text style={styles.label}>Description</Text>
       <TextInput
-        style={[styles.input, { height: 100, textAlignVertical: 'top' }]}
+        style={[styles.input, { height: 100, textAlignVertical: 'top' }, errors.description ? styles.inputError : null]}
         placeholder="Describe your product..."
         placeholderTextColor="#aaa"
         multiline
+        value={description}
+        onChangeText={setDescription}
       />
+      {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
 
       {/* Buttons */}
       <TouchableOpacity style={styles.previewButton}>
         <Text style={styles.buttonText}>Preview Listing</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.submitButton}>
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit for Review</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -122,7 +171,16 @@ export default function Form() {
 }
 
 const styles = StyleSheet.create({
- 
+  errorText: {
+    color: '#ff7675', // A suitable red/pink color for dark theme
+    fontSize: 12,
+    marginTop: 4,
+    marginBottom: 6, // Add some space before the next element
+  },
+  inputError: {
+    borderColor: '#ff7675', // Same red/pink color
+    borderWidth: 1,
+  },
  container: {
     flex: 1,
     padding: 20,
