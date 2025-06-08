@@ -10,7 +10,7 @@ export default function AuthLoadingScreen() {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         // User is signed in
-        navigation.replace('UserDashboardScreen'); // Or your main app screen
+        navigation.replace('MainAppScreen'); // Update this line
       } else {
         // No user is signed in
         navigation.replace('LoginScreen');

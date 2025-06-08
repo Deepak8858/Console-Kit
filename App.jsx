@@ -7,7 +7,8 @@ import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import OtpVerificationScreen from './screens/OtpVerificationScreen';
-import UserDashboardScreen from './screens/UserDashboardScreen';
+// import UserDashboardScreen from './screens/UserDashboardScreen'; // Remove this
+import MainAppScreen from './screens/MainAppScreen'; // Add this
 // Ensure firebaseConfig.js is created and Firebase is initialized,
 // as AuthLoadingScreen depends on it.
 
@@ -22,7 +23,8 @@ export default function App() {
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
         <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
         <Stack.Screen name="OtpVerificationScreen" component={OtpVerificationScreen} />
-        <Stack.Screen name="UserDashboardScreen" component={UserDashboardScreen} />
+        {/* <Stack.Screen name="UserDashboardScreen" component={UserDashboardScreen} /> Change this */}
+        <Stack.Screen name="MainAppScreen" component={MainAppScreen} /> {/* To this */}
       </Stack.Navigator>
     </NavigationContainer>
   );
