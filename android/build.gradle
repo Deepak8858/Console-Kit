@@ -5,17 +5,25 @@ buildscript {
         compileSdkVersion = 35
         targetSdkVersion = 35
         ndkVersion = "26.1.10909125"
-
         kotlinVersion = "2.0.21"
+        // Placeholder for AGP version - user should verify for their specific RN version
+        // For Gradle 8.13, a common AGP version could be around 8.4.0
+        // See https://developer.android.com/studio/releases/gradle-plugin#compatibility-8-4-0
+        // and match with what their RN version supports.
+        androidGradlePluginVersion = "8.4.0"
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
-        classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        // Make sure to use the variable for AGP version
+        classpath("com.android.tools.build:gradle:${rootProject.ext.androidGradlePluginVersion}")
+        classpath("com.facebook.react:react-native-gradle-plugin") // Versioning for this is often handled by RN's setup.
+                                                                    // If build errors occur related to this,
+                                                                    // user might need to specify a version known
+                                                                    // to be compatible with RN 0.79.2.
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${rootProject.ext.kotlinVersion}") // Use defined kotlinVersion
     }
 }
 
